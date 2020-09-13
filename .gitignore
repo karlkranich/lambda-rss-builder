@@ -1,0 +1,3 @@
+# Ignore the function.zip package that contains the python dependencies
+function.zip
+
