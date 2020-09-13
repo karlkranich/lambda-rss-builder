@@ -1,7 +1,7 @@
 # lambda-rss-builder
-This function is meant to be triggered by an mp3 file uploaded to the podcast S3 bucket.
+This function is meant to be triggered by an mp3 file uploaded to the podcast S3 bucket **after** episode info has been added to a DynamoDB table.
 
-It reads podcast episode info from a DynamoDB table, figures out the mp3 duration and file size, and builds a new podcast rss feed.
+It reads podcast episode info from DynamoDB, figures out the mp3 duration and file size, and builds a new podcast rss feed.
 
 **Be sure that the rss file update doesn't trigger this function in an infinite loop**
 
