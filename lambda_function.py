@@ -107,7 +107,7 @@ def lambda_handler(event, context):
         e = p.add_episode()
         e.id = mediaURL
         e.title = 'Episode ' + str(episode['episode-num'])
-        e.summary = htmlencode(episode['description'])
+        e.summary = episode['description']
         e.link = 'http://christcommunitycarmel.org/get-involved/podcasts'
         e.publication_date = datetime.datetime(year, month, day, 12, 00, 00, tzinfo=pytz.timezone('EST'))
         e.media = Media(mediaURL, episode['size'], duration=datetime.timedelta(hours = h, minutes = mins, seconds = secs))
