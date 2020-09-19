@@ -122,7 +122,7 @@ def lambda_handler(event, context):
     # Write the rss file
     print('Writing RSS file to S3')
     rssLocalFile = '/tmp/podcast.rss'
-    rssS3File = 'ccc/podcast2.rss'
+    rssS3File = 'ccc/podcast.rss'
     rssfeed = p.rss_str()
     p.rss_file(rssLocalFile)
     s3 = boto3.client('s3')
