@@ -6,7 +6,7 @@
 
 import json
 import boto3
-from podgen import Podcast, Media, Category, htmlencode
+from podgen import Podcast, Media, Category, htmlencode, Person
 import datetime
 import pytz
 from mutagen.mp3 import MP3
@@ -47,18 +47,25 @@ def lambda_handler(event, context):
     episodes.sort(key=lambda x: x['episode-num'])
     
     # Create the podcast feed
+    # Main podcast info comes from "episode 0"
+    episodeInfo = episodes[0]
+    separator = ', '
     p = Podcast()
-    p.name = 'Christ Community Church Podcast'
-    p.description = 'Midweek encouragement from Christ Community Church in Carmel, IN.'
-    p.website = 'http://www.christcommunitycarmel.org'
-    p.explicit = False
-    p.image = 'https://www.kwksolutions.com/ccc/podcast_logo.png'
-    p.feed_url = 'https://www.kwksolutions.com/ccc/podcast.rss'
-    p.language = 'en-us'
-    p.category = Category('Religion & Spirituality', 'Christianity')
+    p.name = episodeInfo['name']
+    p.description = episodeInfo['description']
+    p.website = episodeInfo['website']
+    p.explicit = episodeInfo['explicit']
+    p.image = episodeInfo['image']
+    p.feed_url = episodeInfo['feed-url']
+    p.language = episodeInfo['language']
+    p.category = Category(episodeInfo['category'], episodeInfo['subcategory'])
+    p.owner = Person(episodeInfo['owner-name'], episodeInfo['owner-email'])
     
     # Process each episode
     for episode in episodes:
+        # Skip "Episode 0"
+        if episode['episode-num'] == 0:
+            continue
         # Check if episode contains media file info (name, duration, size).  If not, add it to db and episode object.
         if 'media-file' not in episode:
             episodeNum = episode['episode-num']
@@ -115,7 +122,7 @@ def lambda_handler(event, context):
     # Write the rss file
     print('Writing RSS file to S3')
     rssLocalFile = '/tmp/podcast.rss'
-    rssS3File = 'ccc/podcast.rss'
+    rssS3File = 'ccc/podcast2.rss'
     rssfeed = p.rss_str()
     p.rss_file(rssLocalFile)
     s3 = boto3.client('s3')
