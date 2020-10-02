@@ -123,9 +123,8 @@ def lambda_handler(event, context):
     print('Writing RSS file to S3')
     rssLocalFile = '/tmp/podcast.rss'
     rssS3File = 'ccc/podcast.rss'
-    rssfeed = p.rss_str()
     p.rss_file(rssLocalFile)
     s3 = boto3.client('s3')
-    s3.upload_file(rssLocalFile, 'kwksolutions.com', rssS3File)
+    s3.upload_file(rssLocalFile, 'kwksolutions.com', rssS3File, ExtraArgs={'ContentType': 'text/xml'})
 
     return
