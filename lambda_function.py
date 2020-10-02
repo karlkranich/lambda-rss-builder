@@ -60,6 +60,7 @@ def lambda_handler(event, context):
     p.language = episodeInfo['language']
     p.category = Category(episodeInfo['category'], episodeInfo['subcategory'])
     p.owner = Person(episodeInfo['owner-name'], episodeInfo['owner-email'])
+    p.authors = [Person(episodeInfo['owner-name'], episodeInfo['owner-email'])]
     
     # Process each episode
     for episode in episodes:
